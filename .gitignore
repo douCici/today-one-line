@@ -21,6 +21,7 @@ build/
 tmp/
 .temp/
 
+# --- assets --- (背景图等静态资源需要纳入版本管理)
 # --- content ---
 miniprogram/database/cards_90.json
 # cards_90.json 作为内容包产物已纳入 content/ 目录管理，miniprogram/ 下只保留 seed
