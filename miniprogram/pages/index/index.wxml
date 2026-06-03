@@ -1,0 +1,40 @@
+<view class="page" style="{{pageBgStyle}}">
+  <view class="mask"></view>
+
+  <view class="content">
+    <view class="title">今日一行</view>
+
+    <view class="card {{cardClass}}">
+      <view class="quote-mark">“</view>
+
+      <view class="quote">
+        {{card.quote_text}}
+      </view>
+
+      <view class="source">—— {{card.source}}</view>
+
+      <view class="divider"></view>
+
+      <view class="actions">
+        <view class="action-line">早｜{{card.morning_action}}</view>
+        <view class="action-line">中｜{{card.noon_action}}</view>
+        <view class="action-line">晚｜{{card.evening_action}}</view>
+      </view>
+    </view>
+
+    <view class="checkins">
+      <view class="checkin" data-field="morning_done" bindtap="toggleCheckin">
+        <text class="dot {{checkin.morning_done ? 'on' : ''}}">{{checkin.morning_done ? '●' : '○'}}</text>
+        <text class="checkin-text">早</text>
+      </view>
+      <view class="checkin" data-field="noon_done" bindtap="toggleCheckin">
+        <text class="dot {{checkin.noon_done ? 'on' : ''}}">{{checkin.noon_done ? '●' : '○'}}</text>
+        <text class="checkin-text">中</text>
+      </view>
+      <view class="checkin" data-field="evening_done" bindtap="toggleCheckin">
+        <text class="dot {{checkin.evening_done ? 'on' : ''}}">{{checkin.evening_done ? '●' : '○'}}</text>
+        <text class="checkin-text">晚</text>
+      </view>
+    </view>
+  </view>
+</view>

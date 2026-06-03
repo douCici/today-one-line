@@ -1,0 +1,41 @@
+[
+  {
+    "date": "2026-06-03",
+    "quote_text": "世界上只有一种真正的英雄主义，\n就是认清生活的真相后\n依然热爱生活。",
+    "source": "罗曼·罗兰",
+    "theme": "希望",
+    "morning_action": "写一难处",
+    "noon_action": "做一小事",
+    "evening_action": "记一好处",
+    "background_type": "solid",
+    "background_url": "",
+    "color_theme": "#F5EFE6",
+    "status": "published"
+  },
+  {
+    "date": "2026-06-04",
+    "quote_text": "你们愿意人怎样待你们，\n你们也要怎样待人。",
+    "source": "圣经",
+    "theme": "温柔",
+    "morning_action": "先问候",
+    "noon_action": "少反驳",
+    "evening_action": "说谢谢",
+    "background_type": "solid",
+    "background_url": "",
+    "color_theme": "#EEF3E8",
+    "status": "published"
+  },
+  {
+    "date": "2026-06-05",
+    "quote_text": "知行合一。",
+    "source": "王阳明",
+    "theme": "行动",
+    "morning_action": "定一事",
+    "noon_action": "马上做",
+    "evening_action": "看结果",
+    "background_type": "solid",
+    "background_url": "",
+    "color_theme": "#EEF2F8",
+    "status": "published"
+  }
+]

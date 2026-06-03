@@ -1,0 +1,22 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Node dependencies
+node_modules/
+miniprogram/cloudfunctions/*/node_modules/
+
+# WeChat DevTools local files
+miniprogram/private.*.json
+miniprogram/.cloudbase/
+
+# Build / temp
+dist/
+build/
+tmp/
+.temp/
