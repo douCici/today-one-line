@@ -111,8 +111,11 @@ Page({
       };
     }
 
+    const gradientStart = card.gradient_start || card.color_theme || '#F5EFE6';
+    const gradientEnd = card.gradient_end || '#E6F0EA';
+
     return {
-      pageBgStyle: `background: ${card.color_theme || '#F5EFE6'};`,
+      pageBgStyle: `background: linear-gradient(160deg, ${gradientStart} 0%, ${gradientEnd} 100%);`,
       cardClass: 'solid'
     };
   }
