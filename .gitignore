@@ -31,3 +31,4 @@ miniprogram/database/cards_90.json
 !.env.example
 miniprogram/env.js
 miniprogram/project.private.config.json
+miniprogram/project.config.json
