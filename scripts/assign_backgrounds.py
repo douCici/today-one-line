@@ -64,8 +64,9 @@ def main():
         theme_counter[bt] = idx + 1
 
         card['background_type'] = 'image'
-        # 上传到云存储后替换为 cloud:// 格式的 fileID
-        card['background_url'] = f"/assets/backgrounds/{bg['filename']}"
+        # 小程序本地资源路径。优先使用背景包中已校准的占位路径，避免重复拼出
+        # /assets/backgrounds/backgrounds/*.jpg。上传到云存储后可替换为 cloud:// fileID。
+        card['background_url'] = bg.get('background_url_placeholder') or f"/assets/backgrounds/{pathlib.Path(bg['filename']).name}"
 
         stats.setdefault(f'{ct}→{bt}', 0)
         stats[f'{ct}→{bt}'] += 1
@@ -75,11 +76,15 @@ def main():
     for mapping, count in sorted(stats.items()):
         print(f'  {mapping}: {count}张卡片')
 
-    # 输出
-    seed_path = ROOT / 'miniprogram' / 'database' / 'cards.seed.json'
-    with open(seed_path, 'w', encoding='utf-8') as f:
-        json.dump(cards, f, ensure_ascii=False, indent=2)
-    print(f'\n✅ 已输出 {len(cards)} 条 → {seed_path}')
+    # 输出：content/ 作为内容源，miniprogram/database/ 作为小程序导入文件源。
+    seed_paths = [
+        ROOT / 'content' / 'cards.seed.json',
+        ROOT / 'miniprogram' / 'database' / 'cards.seed.json',
+    ]
+    for seed_path in seed_paths:
+        with open(seed_path, 'w', encoding='utf-8') as f:
+            json.dump(cards, f, ensure_ascii=False, indent=2)
+        print(f'\n✅ 已输出 {len(cards)} 条 → {seed_path}')
 
     # 检查覆盖率
     has_bg = sum(1 for c in cards if c.get('background_url'))
