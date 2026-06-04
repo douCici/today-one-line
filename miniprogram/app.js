@@ -1,3 +1,5 @@
+const envConfig = require('./env');
+
 App({
   onLaunch() {
     if (!wx.cloud) {
@@ -6,8 +8,7 @@ App({
     }
 
     wx.cloud.init({
-      // TODO: 替换为你的云开发环境 ID，例如：prod-xxxxxx
-      env: 'YOUR_CLOUD_ENV_ID',
+      env: envConfig.CLOUD_ENV_ID,
       traceUser: true
     });
   }

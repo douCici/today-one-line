@@ -30,12 +30,15 @@ database/
 ## 部署步骤
 
 1. 用微信开发者工具打开本项目。
-2. 在微信开发者工具中开通云开发。
-3. 将 `app.js` 里的 `YOUR_CLOUD_ENV_ID` 替换成自己的云环境 ID。
-4. 在云数据库中创建集合：`cards`、`checkins`。
-5. 将 `database/cards.seed.json` 中的数据导入 `cards` 集合。
-6. 上传并部署云函数：`getTodayCard`、`toggleCheckin`。
-7. 编译运行。
+2. 复制 `env.example.js` 为 `env.js`，在 `env.js` 中填写自己的云开发环境 ID。
+3. 复制 `project.private.config.example.json` 为 `project.private.config.json`，填写自己的小程序 AppID。
+4. 在微信开发者工具中开通云开发。
+5. 在云数据库中创建集合：`cards`、`checkins`。
+6. 将 `database/cards.seed.json` 中的数据导入 `cards` 集合。
+7. 上传并部署云函数：`getTodayCard`、`toggleCheckin`。
+8. 编译运行。
+
+> `env.js` 和 `project.private.config.json` 是本地个人配置，已加入 `.gitignore`，不要上传到 GitHub。
 
 ## 数据集合
 
