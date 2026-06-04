@@ -1,3 +1,15 @@
+function normalizeBackgroundUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+  return url.replace('/assets/backgrounds/backgrounds/', '/assets/backgrounds/');
+}
+
+function normalizeCard(card) {
+  return {
+    ...card,
+    background_url: normalizeBackgroundUrl(card.background_url)
+  };
+}
+
 const DEFAULT_CARD = {
   _id: 'demo-card',
   date: '',
@@ -38,7 +50,7 @@ Page({
       });
 
       const result = res.result || {};
-      const card = result.card || DEFAULT_CARD;
+      const card = normalizeCard(result.card || DEFAULT_CARD);
       const checkin = result.checkin || this.data.checkin;
 
       this.setData({
@@ -90,9 +102,11 @@ Page({
   },
 
   buildVisualState(card) {
-    if (card.background_type === 'image' && card.background_url) {
+    const backgroundUrl = normalizeBackgroundUrl(card.background_url);
+
+    if (card.background_type === 'image' && backgroundUrl) {
       return {
-        pageBgStyle: `background-image: url(${card.background_url});`,
+        pageBgStyle: `background-image: url(${backgroundUrl});`,
         cardClass: ''
       };
     }

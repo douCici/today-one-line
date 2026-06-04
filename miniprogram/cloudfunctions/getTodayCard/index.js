@@ -23,6 +23,18 @@ function getShanghaiDate() {
   return `${map.year}-${map.month}-${map.day}`;
 }
 
+function normalizeBackgroundUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+  return url.replace('/assets/backgrounds/backgrounds/', '/assets/backgrounds/');
+}
+
+function normalizeCard(card) {
+  return {
+    ...card,
+    background_url: normalizeBackgroundUrl(card.background_url)
+  };
+}
+
 function defaultCard(today) {
   return {
     _id: 'demo-card',
@@ -84,6 +96,8 @@ exports.main = async () => {
     noon_done: false,
     evening_done: false
   };
+
+  card = normalizeCard(card);
 
   return {
     card,
