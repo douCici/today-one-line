@@ -34,7 +34,7 @@ database/
 3. 复制 `project.private.config.example.json` 为 `project.private.config.json`，填写自己的小程序 AppID。
 4. 在微信开发者工具中开通云开发。
 5. 在云数据库中创建集合：`cards`、`checkins`。
-6. 将 `database/cards.seed.jsonl` 中的数据按 JSON Lines 格式导入 `cards` 集合。
+6. 将 `database/cards.import.json` 中的数据按 JSON Lines 格式导入 `cards` 集合（文件扩展名为 `.json`）。
 7. 上传并部署云函数：`getTodayCard`、`toggleCheckin`。
 8. 编译运行。
 
