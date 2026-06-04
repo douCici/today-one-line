@@ -1,94 +1,86 @@
 #!/usr/bin/env python3
 """
-为 cards_90.json 按主题映射背景图，生成更新后的 cards.seed.json。
+为 cards_90.json 生成渐变背景版 cards seed。
 
 使用方式：
     python3 scripts/assign_backgrounds.py
 
-输入：content/cards_90.json + content/background-pack/backgrounds.json
-输出：miniprogram/database/cards.seed.json（含 background_type + background_url 的种子数据）
+输入：content/cards_90.json
+输出：
+  - content/cards.seed.json
+  - miniprogram/database/cards.seed.json
+  - miniprogram/database/cards.import.json  # JSON Lines 内容，.json 扩展名供微信云数据库导入
+  - miniprogram/database/cards.seed.jsonl
+
+说明：当前版本不再把本地背景图片放入 miniprogram 主包，避免触发微信 2MB 限制。
 """
 
 import json
 import pathlib
-import random
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
-# 卡片主题 → 背景主题 映射
-THEME_MAP = {
-    '希望': '希望',
-    '平安': '平静',
-    '感恩': '感恩',
-    '行动': '行动',
-    '节制': '节制',
-    '勇气': '希望',
-    '诚实': '行动',
-    '温柔': '平静',
-    '学习': '行动',
-    '爱':     '感恩',
-    '忍耐': '节制',
-    '谦卑': '节制',
-    '专注': '行动',
-    '宽恕': '平静',
-    '清醒': '行动',
+THEME_GRADIENTS = {
+    '希望': ('#F6EDE8', '#E6F0EA'),
+    '平安': ('#EAF2F1', '#F7EFE3'),
+    '感恩': ('#F8EEE2', '#F1E4D0'),
+    '行动': ('#EEF1E6', '#E4ECF5'),
+    '节制': ('#ECE9E2', '#DDE6E0'),
+    '勇气': ('#F3E7D7', '#E8F0DC'),
+    '诚实': ('#EEF0E8', '#E7EDF4'),
+    '温柔': ('#F6EDE8', '#E6F0EA'),
+    '学习': ('#EEF1E6', '#E4ECF5'),
+    '爱': ('#F8EEE2', '#F1E4D0'),
+    '忍耐': ('#ECE9E2', '#DDE6E0'),
+    '谦卑': ('#ECE9E2', '#DDE6E0'),
+    '专注': ('#EEF1E6', '#E4ECF5'),
+    '宽恕': ('#EAF2F1', '#F7EFE3'),
+    '清醒': ('#EEF1E6', '#E4ECF5'),
 }
+
 
 def load_json(path):
     with open(path, encoding='utf-8') as f:
         return json.load(f)
 
+
+def write_json(path, data):
+    with open(path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+        f.write('\n')
+
+
+def write_json_lines(path, data):
+    with open(path, 'w', encoding='utf-8') as f:
+        for item in data:
+            f.write(json.dumps(item, ensure_ascii=False, separators=(',', ':')) + '\n')
+
+
 def main():
     cards = load_json(ROOT / 'content' / 'cards_90.json')
-    bgs = load_json(ROOT / 'content' / 'background-pack' / 'backgrounds.json')
-
-    # 按背景主题分组背景图
-    bg_by_theme = {}
-    for bg in bgs:
-        t = bg['theme_cn']
-        bg_by_theme.setdefault(t, []).append(bg)
-
-    # 每个背景主题用一个计数器做 round-robin 分配
-    theme_counter = {t: 0 for t in bg_by_theme}
-    stats = {}
 
     for card in cards:
-        ct = card['theme']
-        bt = THEME_MAP.get(ct)
-        if not bt:
-            bt = '希望'  # fallback
+        start, end = THEME_GRADIENTS.get(card.get('theme'), ('#F5EFE6', '#E6F0EA'))
+        card['background_type'] = 'gradient'
+        card['background_url'] = ''
+        card['color_theme'] = card.get('color_theme') or start
+        card['gradient_start'] = card.get('gradient_start') or start
+        card['gradient_end'] = card.get('gradient_end') or end
 
-        pool = bg_by_theme.get(bt, bg_by_theme.get('希望', []))
-        idx = theme_counter.get(bt, 0) % len(pool)
-        bg = pool[idx]
-        theme_counter[bt] = idx + 1
-
-        card['background_type'] = 'image'
-        # 小程序本地资源路径。优先使用背景包中已校准的占位路径，避免重复拼出
-        # /assets/backgrounds/backgrounds/*.jpg。上传到云存储后可替换为 cloud:// fileID。
-        card['background_url'] = bg.get('background_url_placeholder') or f"/assets/backgrounds/{pathlib.Path(bg['filename']).name}"
-
-        stats.setdefault(f'{ct}→{bt}', 0)
-        stats[f'{ct}→{bt}'] += 1
-
-    # 统计
-    print('主题映射与背景分配:')
-    for mapping, count in sorted(stats.items()):
-        print(f'  {mapping}: {count}张卡片')
-
-    # 输出：content/ 作为内容源，miniprogram/database/ 作为小程序导入文件源。
-    seed_paths = [
+    json_paths = [
         ROOT / 'content' / 'cards.seed.json',
         ROOT / 'miniprogram' / 'database' / 'cards.seed.json',
     ]
-    for seed_path in seed_paths:
-        with open(seed_path, 'w', encoding='utf-8') as f:
-            json.dump(cards, f, ensure_ascii=False, indent=2)
-        print(f'\n✅ 已输出 {len(cards)} 条 → {seed_path}')
+    for path in json_paths:
+        write_json(path, cards)
+        print(f'✅ 已输出 {len(cards)} 条 → {path}')
 
-    # 检查覆盖率
-    has_bg = sum(1 for c in cards if c.get('background_url'))
-    print(f'✅ 有背景图的卡片: {has_bg}/{len(cards)}')
+    write_json_lines(ROOT / 'miniprogram' / 'database' / 'cards.import.json', cards)
+    write_json_lines(ROOT / 'miniprogram' / 'database' / 'cards.seed.jsonl', cards)
+
+    gradient_count = sum(1 for card in cards if card.get('background_type') == 'gradient' and not card.get('background_url'))
+    print(f'✅ 渐变背景卡片: {gradient_count}/{len(cards)}')
+
 
 if __name__ == '__main__':
     main()

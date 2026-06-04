@@ -70,3 +70,8 @@ database/
 - evening_done
 - created_at
 - updated_at
+
+
+## 包体积说明
+
+当前版本为渐变背景版，不再把背景图片放进小程序主包。`cards` 数据使用 `gradient_start` / `gradient_end` 控制背景，避免触发微信 2MB 主包限制。
